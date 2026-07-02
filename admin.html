@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Festival For Peace - Admin Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#af101a",
+                        "secondary": "#9f3f39",
+                        "tertiary": "#005f7b",
+                        "surface": "#fff8f7",
+                        "on-surface": "#271816",
+                        "surface-container": "#ffe9e7",
+                        "outline": "#8f6f6c",
+                        "error": "#C62828"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-main {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhMjjTTZgd4_vHjQSWWAO1YUSLUGU-nU_jEl1B2o3pIjgnGfymVmrzdR74Ui5LhjS4oIZRx78Etct46Ygeg6mhTf_lYLfPWZQ96S75F4ty6KNuke0gS39jne5MQc5U0ZmFoZz7-tsKmnMJ2tiYqg-DEUMVpW5NAuj4Q0SJvw5rImBJ3DYIbjTi1hM4F2tIAWbo8si_EnWFECM9XORnafyeGnu71YxACu54Qwe_Dh7PCZPjkHDU6drJvSljLcRNMdzgnqNTOUsHv7w');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+    </style>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+<body class="bg-main min-h-screen w-full font-body-md text-on-surface flex items-center justify-center">
+
+<script src="core.js"></script>
+
+<!-- Login Screen -->
+<div id="login-screen" class="glass-card w-full max-w-md rounded-[32px] p-8 space-y-6 m-4 transition-all duration-500">
+    <div class="text-center">
+        <span class="material-symbols-outlined text-5xl text-primary mb-2">admin_panel_settings</span>
+        <h2 class="font-headline-md text-primary font-extrabold tracking-tight">ĐĂNG NHẬP ADMIN</h2>
+    </div>
+    <div class="space-y-4">
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Tài khoản</label>
+            <input type="text" id="username" class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none" value="admin">
+        </div>
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Mật khẩu</label>
+            <input type="password" id="password" class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none" value="admin123">
+        </div>
+        <p id="login-error" class="text-red-500 text-sm hidden font-bold">Sai tài khoản hoặc mật khẩu!</p>
+    </div>
+    <button id="btn-login" class="w-full h-12 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-secondary transition-colors">ĐĂNG NHẬP</button>
+</div>
+
+<!-- Staff Onboarding Modal -->
+<div id="staff-onboarding-screen" class="hidden glass-card w-full max-w-md rounded-[32px] p-8 space-y-6 m-4 transition-all duration-500">
+    <div class="text-center">
+        <span class="material-symbols-outlined text-5xl text-tertiary mb-2">badge</span>
+        <h2 class="font-headline-md text-tertiary font-extrabold tracking-tight">THÔNG TIN NHÂN VIÊN</h2>
+        <p class="text-sm text-gray-600 mt-2">Vui lòng nhập tên để nhận việc xử lý sự cố</p>
+    </div>
+    <div class="space-y-4">
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Tên của bạn</label>
+            <input type="text" id="staff-name" class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-tertiary outline-none" placeholder="VD: Bảo vệ 1, Lễ tân A...">
+        </div>
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Khu vực phụ trách</label>
+            <select id="staff-zone" class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-tertiary outline-none">
+                <option value="ALL">Tất cả khu vực (Admin Tổng)</option>
+                <option value="ODD">Cánh Trái (Các ghế số Lẻ)</option>
+                <option value="EVEN">Cánh Phải (Các ghế số Chẵn)</option>
+            </select>
+        </div>
+    </div>
+    <button id="btn-save-staff" class="w-full h-12 bg-tertiary text-white font-bold rounded-xl shadow-lg hover:bg-opacity-90 transition-colors">VÀO HỆ THỐNG</button>
+</div>
+
+<!-- Dashboard Screen -->
+<div id="dashboard-screen" class="hidden w-full max-w-6xl m-2 md:m-4 h-[95vh] md:h-[90vh] flex-col glass-card rounded-[24px] md:rounded-[32px] overflow-hidden">
+    <header class="p-4 md:p-6 border-b border-gray-200 bg-white/50 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+        <div>
+            <h2 class="font-headline-md text-primary font-bold text-xl md:text-2xl">Quản Lý Khách Mời & Chỗ Ngồi</h2>
+            <p class="text-sm text-gray-600 mt-1">Thay đổi trạng thái để tự động dồn ghế.</p>
+        </div>
+        <div class="flex gap-2 md:gap-4 items-center flex-wrap w-full lg:w-auto">
+            <div id="current-staff-display" class="hidden items-center bg-blue-50 text-blue-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold shadow-sm border border-blue-100 text-sm">
+                <span class="material-symbols-outlined text-sm mr-1 md:mr-2">badge</span>
+                <span id="display-staff-name">Nhân viên</span>
+                <span class="mx-1 md:mx-2">|</span>
+                <span id="display-staff-zone" class="text-xs uppercase bg-blue-200 px-2 py-0.5 rounded-full">ALL</span>
+            </div>
+            <button id="btn-download-template" class="px-3 py-1.5 md:px-4 md:py-2 bg-green-600 text-white rounded-lg flex items-center gap-1 md:gap-2 hover:bg-green-700 transition font-bold shadow-md text-sm md:text-base">
+                <span class="material-symbols-outlined text-sm">download</span> Tải Mẫu
+            </button>
+            <button id="btn-import-excel" class="px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg flex items-center gap-1 md:gap-2 hover:bg-blue-700 transition font-bold shadow-md text-sm md:text-base">
+                <span class="material-symbols-outlined text-sm">upload_file</span> Nhập Excel
+            </button>
+            <button id="btn-add-guest" class="px-3 py-1.5 md:px-4 md:py-2 bg-tertiary text-white rounded-lg flex items-center gap-1 md:gap-2 hover:bg-opacity-90 transition font-bold shadow-md text-sm md:text-base">
+                <span class="material-symbols-outlined text-sm">add</span> Thêm Khách
+            </button>
+            <button id="btn-logout" class="px-3 py-1.5 md:px-4 md:py-2 bg-gray-200 text-gray-700 rounded-lg flex items-center gap-1 md:gap-2 hover:bg-gray-300 transition font-bold shadow-sm text-sm md:text-base">
+                <span class="material-symbols-outlined text-sm">logout</span> Đăng Xuất
+            </button>
+        </div>
+    </header>
+    
+    <!-- Toolbar -->
+    <div class="px-4 md:px-6 py-3 md:py-4 bg-white/60 border-b border-gray-200 flex flex-col md:flex-row flex-wrap gap-3 md:gap-4 items-center shadow-sm">
+        <div class="relative w-full md:flex-1 md:min-w-[200px]">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+            <input type="text" id="search-guest" placeholder="Tìm theo tên hoặc mã ghế..." class="w-full pl-10 pr-4 h-10 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm">
+        </div>
+        <div class="w-full md:w-56">
+            <select id="filter-unit" class="w-full px-3 h-10 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm font-bold text-gray-700">
+                <option value="">-- Tất cả Đơn vị --</option>
+            </select>
+        </div>
+        <div class="w-full md:w-48">
+            <select id="filter-status" class="w-full px-3 h-10 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none text-sm font-bold text-gray-700">
+                <option value="">-- Tất cả Trạng thái --</option>
+                <option value="present">Đã Check-in</option>
+                <option value="absent">Vắng mặt</option>
+                <option value="empty">Chưa đến</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="p-2 md:p-6 flex-1 overflow-auto bg-white/30">
+        <table class="w-full min-w-[800px] text-left border-collapse bg-white rounded-xl overflow-hidden shadow-sm">
+            <thead>
+                <tr class="bg-gray-100/80 text-gray-700 border-b border-gray-200">
+                    <th class="p-4 font-bold whitespace-nowrap">Họ Tên</th>
+                    <th class="p-4 font-bold whitespace-nowrap">Đơn Vị</th>
+                    <th class="p-4 font-bold whitespace-nowrap">Ghế</th>
+                    <th class="p-4 font-bold whitespace-nowrap">Trạng Thái</th>
+                    <th class="p-4 font-bold whitespace-nowrap">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody id="guest-table-body">
+                <!-- Rows injected via JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div id="guest-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-md rounded-[24px] p-6 shadow-2xl relative bg-white">
+        <button id="btn-close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h3 id="modal-title" class="text-xl font-bold mb-4 text-primary">Thêm Khách Mời</h3>
+        
+        <div class="space-y-4">
+            <input type="hidden" id="modal-id">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Họ Tên</label>
+                <input type="text" id="modal-name" class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Đơn Vị</label>
+                <input type="text" id="modal-unit" class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none">
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Dãy Hàng</label>
+                    <select id="modal-seat-row" class="w-full h-12 px-2 text-sm rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none">
+                        <option value="">-- Hàng --</option>
+                        <option value="A">Hàng A</option>
+                        <option value="B">Hàng B</option>
+                        <option value="C">Hàng C</option>
+                        <option value="D">Hàng D</option>
+                        <option value="E">Hàng E</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Cánh (Khu)</label>
+                    <select id="modal-seat-side" class="w-full h-12 px-2 text-sm rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none">
+                        <option value="">-- Cánh --</option>
+                        <option value="left">Trái (Lẻ)</option>
+                        <option value="right">Phải (Chẵn)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Số Ghế</label>
+                    <select id="modal-seat-num" class="w-full h-12 px-2 text-sm rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none" disabled>
+                        <option value="">-- Chọn Ghế --</option>
+                    </select>
+                </div>
+            </div>
+            <button id="btn-save-guest" class="w-full h-12 bg-primary text-white font-bold rounded-xl mt-6 shadow-lg hover:bg-secondary transition-colors">LƯU THÔNG TIN</button>
+        </div>
+    </div>
+</div>
+
+<!-- Import Excel Modal -->
+<div id="import-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-4xl rounded-[24px] p-6 shadow-2xl relative bg-white max-h-[90vh] flex flex-col">
+        <button id="btn-close-import-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h3 class="text-xl font-bold mb-4 text-blue-700 flex items-center gap-2">
+            <span class="material-symbols-outlined">upload_file</span> Nhập Danh Sách Từ Excel
+        </h3>
+        
+        <div class="flex flex-col gap-4 flex-1 min-h-0">
+            <!-- Dropzone -->
+            <div id="excel-dropzone" class="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center cursor-pointer hover:bg-blue-50 transition-colors">
+                <span class="material-symbols-outlined text-4xl text-blue-400 mb-2">cloud_upload</span>
+                <p class="font-bold text-gray-700">Kéo thả file Excel (.xlsx) vào đây hoặc click để chọn file</p>
+                <p class="text-sm text-gray-500 mt-1">Sử dụng file mẫu để tránh lỗi định dạng</p>
+                <input type="file" id="excel-file-input" accept=".xlsx, .xls" class="hidden">
+            </div>
+
+            <!-- Preview Area -->
+            <div id="import-preview-area" class="hidden flex-1 flex flex-col min-h-0 border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+                <div class="bg-gray-200 p-3 flex justify-between items-center text-sm font-bold border-b border-gray-300">
+                    <span id="preview-stats">Đã quét: 0 dòng hợp lệ, 0 lỗi</span>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-1 cursor-pointer">
+                            <input type="radio" name="import-mode" value="append" checked class="text-blue-600 focus:ring-blue-500"> Thêm nối tiếp
+                        </label>
+                        <label class="flex items-center gap-1 cursor-pointer text-red-600">
+                            <input type="radio" name="import-mode" value="replace" class="text-red-600 focus:ring-red-500"> Ghi đè toàn bộ
+                        </label>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-auto p-0">
+                    <table class="w-full text-left border-collapse text-sm bg-white">
+                        <thead class="bg-gray-100 sticky top-0 shadow-sm">
+                            <tr>
+                                <th class="p-2 border-b">TT</th>
+                                <th class="p-2 border-b">Họ Tên</th>
+                                <th class="p-2 border-b">Đơn Vị</th>
+                                <th class="p-2 border-b">Ghế</th>
+                                <th class="p-2 border-b">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preview-table-body">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <button id="btn-confirm-import" class="w-full h-12 bg-blue-600 text-white font-bold rounded-xl mt-2 shadow-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>XÁC NHẬN LƯU LÊN HỆ THỐNG</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Login Logic
+    const loginScreen = document.getElementById('login-screen');
+    const staffOnboardingScreen = document.getElementById('staff-onboarding-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+    
+    let currentStaff = JSON.parse(localStorage.getItem('staffInfo'));
+
+    // Hash function helper
+    async function hashString(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    document.getElementById('btn-login').addEventListener('click', async () => {
+        const btnLogin = document.getElementById('btn-login');
+        const originalText = btnLogin.textContent;
+        btnLogin.textContent = 'ĐANG XỬ LÝ...';
+        btnLogin.disabled = true;
+
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        
+        // Hash inputs
+        const uHash = await hashString(u);
+        const pHash = await hashString(p);
+        
+        if(uHash === '7bf3d8554facb6bd8fd655d2b5ce14b73d574693a0afcc95a42e7db409f5db44' && 
+           pHash === '3d2af53f15d7e92ef87a0d39a65b5240f62aa7cdbcc13abd6d210f4b5d4cfb2f') {
+            loginScreen.classList.add('hidden');
+            if (!currentStaff) {
+                staffOnboardingScreen.classList.remove('hidden');
+            } else {
+                showDashboard();
+            }
+        } else {
+            document.getElementById('login-error').classList.remove('hidden');
+        }
+        
+        btnLogin.textContent = originalText;
+        btnLogin.disabled = false;
+    });
+
+    document.getElementById('btn-save-staff').addEventListener('click', () => {
+        const name = document.getElementById('staff-name').value.trim();
+        const zone = document.getElementById('staff-zone').value;
+        if (!name) return alert("Vui lòng nhập tên của bạn!");
+        
+        currentStaff = { id: 'staff_' + Date.now(), name, zone };
+        localStorage.setItem('staffInfo', JSON.stringify(currentStaff));
+        
+        staffOnboardingScreen.classList.add('hidden');
+        showDashboard();
+    });
+
+    function showDashboard() {
+        dashboardScreen.classList.remove('hidden');
+        dashboardScreen.classList.add('flex'); // Add flex to make layout work
+        
+        if (currentStaff) {
+            document.getElementById('current-staff-display').classList.remove('hidden');
+            document.getElementById('current-staff-display').classList.add('flex');
+            document.getElementById('display-staff-name').textContent = currentStaff.name;
+            let zoneText = 'Tất cả';
+            if (currentStaff.zone === 'ODD') zoneText = 'Cánh Trái (Lẻ)';
+            if (currentStaff.zone === 'EVEN') zoneText = 'Cánh Phải (Chẵn)';
+            document.getElementById('display-staff-zone').textContent = zoneText;
+        }
+
+        renderTable();
+        if (window.incidentsData) {
+            window.dispatchEvent(new CustomEvent('incidentsUpdated', { detail: window.incidentsData }));
+        }
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        localStorage.removeItem('staffInfo');
+        currentStaff = null;
+        document.getElementById('staff-name').value = '';
+        document.getElementById('current-staff-display').classList.add('hidden');
+        document.getElementById('current-staff-display').classList.remove('flex');
+
+        dashboardScreen.classList.add('hidden');
+        dashboardScreen.classList.remove('flex');
+        loginScreen.classList.remove('hidden');
+        document.getElementById('incident-modal').classList.add('hidden');
+        if (typeof stopBeep === 'function') stopBeep();
+    });
+
+    // App Initialization using core.js
+    window.initApp(() => {
+        if(!dashboardScreen.classList.contains('hidden')){
+            updateUnitFilterOptions();
+            renderTable();
+        }
+    });
+
+    window.addEventListener('guestsDataUpdated', () => {
+        updateUnitFilterOptions();
+        if(!dashboardScreen.classList.contains('hidden')){
+            renderTable();
+        }
+    });
+
+    // Event listeners for filters
+    const searchGuestInput = document.getElementById('search-guest');
+    const filterUnitSelect = document.getElementById('filter-unit');
+    const filterStatusSelect = document.getElementById('filter-status');
+
+    if(searchGuestInput) searchGuestInput.addEventListener('input', renderTable);
+    if(filterUnitSelect) filterUnitSelect.addEventListener('change', renderTable);
+    if(filterStatusSelect) filterStatusSelect.addEventListener('change', renderTable);
+
+    function updateUnitFilterOptions() {
+        if (!filterUnitSelect) return;
+        const currentVal = filterUnitSelect.value;
+        const units = new Set();
+        window.guestsData.forEach(g => {
+            if (g.unit) units.add(g.unit.trim());
+        });
+        
+        let html = '<option value="">-- Tất cả Đơn vị --</option>';
+        [...units].sort().forEach(u => {
+            html += `<option value="${u}">${u}</option>`;
+        });
+        filterUnitSelect.innerHTML = html;
+        filterUnitSelect.value = currentVal; // Restore selection if it still exists
+    }
+
+    // Export Firebase functions to window from inside core.js or re-init here.
+    // To ensure admin can save to Firebase, we expose window._firebaseSet from core.js.
+    // Let's modify core.js slightly to export set/ref, or do it via direct REST API.
+    // Alternatively, we can use the window.setFirebaseGuests function we'll inject.
+
+    function renderTable() {
+        const tbody = document.getElementById('guest-table-body');
+        tbody.innerHTML = '';
+        
+        const searchInputEl = document.getElementById('search-guest');
+        const unitSelectEl = document.getElementById('filter-unit');
+        const statusSelectEl = document.getElementById('filter-status');
+        
+        const searchTerm = (searchInputEl && searchInputEl.value) ? 
+            (window.removeAccents ? window.removeAccents(searchInputEl.value.trim()) : searchInputEl.value.trim().toLowerCase()) 
+            : '';
+        const selectedUnit = (unitSelectEl && unitSelectEl.value) ? unitSelectEl.value : '';
+        const selectedStatus = (statusSelectEl && statusSelectEl.value) ? statusSelectEl.value : '';
+
+        // Sort guests by seat for consistent display
+        let sortedGuests = [...window.guestsData].sort((a, b) => {
+             // Extract prefix and number
+             const matchA = (a.seat || '').match(/([a-zA-Z]+)-(\d+)/);
+             const matchB = (b.seat || '').match(/([a-zA-Z]+)-(\d+)/);
+             if (matchA && matchB) {
+                 if (matchA[1] !== matchB[1]) return matchA[1].localeCompare(matchB[1]);
+                 return parseInt(matchA[2]) - parseInt(matchB[2]);
+             }
+             return (a.seat || '').localeCompare(b.seat || '');
+        });
+
+        // Apply filters
+        sortedGuests = sortedGuests.filter(g => {
+            const matchUnit = selectedUnit === '' || (g.unit && g.unit.trim() === selectedUnit);
+            
+            let currentStatus = 'empty';
+            if (g.status === 'absent') currentStatus = 'absent';
+            else if (g.status === 'present') currentStatus = 'present';
+            const matchStatus = selectedStatus === '' || currentStatus === selectedStatus;
+            
+            let matchSearch = true;
+            if (searchTerm) {
+                const nameStr = window.removeAccents ? window.removeAccents(g.name || '') : (g.name || '').toLowerCase();
+                const seatStr = (g.seat || '').toLowerCase();
+                matchSearch = nameStr.includes(searchTerm) || seatStr.includes(searchTerm);
+            }
+            
+            return matchUnit && matchStatus && matchSearch;
+        });
+
+        sortedGuests.forEach(g => {
+            const isAbsent = g.status === 'absent';
+            const isPresent = g.status === 'present';
+            
+            let statusBadge = '';
+            if (isAbsent) statusBadge = '<span class="px-3 py-1.5 rounded-lg text-sm font-bold bg-red-100 text-red-700">Vắng mặt</span>';
+            else if (isPresent) statusBadge = '<span class="px-3 py-1.5 rounded-lg text-sm font-bold bg-green-100 text-green-700">Đã Check-in</span>';
+            else statusBadge = '<span class="px-3 py-1.5 rounded-lg text-sm font-bold bg-gray-100 text-gray-700">Chưa đến</span>';
+
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-100 hover:bg-gray-50 transition-colors";
+            tr.innerHTML = `
+                <td class="p-4 ${isAbsent ? 'line-through text-gray-400' : 'text-gray-800 font-medium'}">
+                    ${g.name} ${g.isVip ? '<span class="text-[10px] bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded ml-2 font-bold uppercase">VIP</span>' : ''}
+                </td>
+                <td class="p-4 text-gray-600">${g.unit}</td>
+                <td class="p-4 font-bold text-tertiary">${g.seat || '<span class="text-gray-400 font-normal italic">Chưa xếp</span>'}</td>
+                <td class="p-4">
+                    ${statusBadge}
+                </td>
+                <td class="p-4 flex gap-2">
+                    <button onclick="markPresent('${g.id}')" title="Check-in thủ công" class="p-1.5 bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-800 rounded-lg transition-colors"><span class="material-symbols-outlined text-[20px]">how_to_reg</span></button>
+                    <button onclick="markAbsent('${g.id}')" title="Báo vắng mặt (Dồn ghế)" class="p-1.5 bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-800 rounded-lg transition-colors"><span class="material-symbols-outlined text-[20px]">person_off</span></button>
+                    <button onclick="editGuest('${g.id}')" title="Sửa" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 rounded-lg transition-colors"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                    <button onclick="deleteGuest('${g.id}')" title="Xóa" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-800 rounded-lg transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- SEAT SHIFTING LOGIC ---
+    window.markAbsent = async function(id) {
+        if(!confirm("Xác nhận dồn ghế? Hãy đảm bảo không có Admin khác đang thao tác trên hệ thống để tránh xung đột dữ liệu.")) return;
+        const guestIndex = window.guestsData.findIndex(g => g.id === id);
+        if(guestIndex === -1) return;
+
+        const guest = window.guestsData[guestIndex];
+        if (guest.status === 'absent') return;
+
+        guest.status = 'absent';
+        const freedSeat = guest.seat;
+        if (freedSeat) {
+            guest.seat = null;
+            
+            const match = freedSeat.match(/^([A-E])(\d+)$/);
+            if (match) {
+                const row = match[1];
+                const isEven = parseInt(match[2]) % 2 === 0;
+                
+                let allSeats = window.guestsData
+                    .map(g => g.seat)
+                    .filter(Boolean)
+                    .filter(s => {
+                        const m = s.match(/^([A-E])(\d+)$/);
+                        return m && m[1] === row && (parseInt(m[2]) % 2 === 0) === isEven;
+                    });
+                
+                allSeats.push(freedSeat);
+                allSeats = [...new Set(allSeats)].sort((a, b) => {
+                    const ma = a.match(/^([A-E])(\d+)$/);
+                    const mb = b.match(/^([A-E])(\d+)$/);
+                    return parseInt(ma[2]) - parseInt(mb[2]);
+                });
+
+                let presentGuests = window.guestsData.filter(g => {
+                    if (g.status === 'absent' || !g.seat) return false;
+                    const m = g.seat.match(/^([A-E])(\d+)$/);
+                    return m && m[1] === row && (parseInt(m[2]) % 2 === 0) === isEven;
+                });
+                
+                presentGuests.sort((a, b) => {
+                    const ma = a.seat.match(/^([A-E])(\d+)$/);
+                    const mb = b.seat.match(/^([A-E])(\d+)$/);
+                    return parseInt(ma[2]) - parseInt(mb[2]);
+                });
+
+                for(let i = 0; i < presentGuests.length; i++){
+                    if(i < allSeats.length) {
+                        presentGuests[i].seat = allSeats[i];
+                    }
+                }
+            }
+        }
+
+        await saveGuestsToFirebase();
+        renderTable();
+    };
+
+    window.markPresent = async function(id) {
+        const guestIndex = window.guestsData.findIndex(g => g.id === id);
+        if(guestIndex === -1) return;
+        
+        const guest = window.guestsData[guestIndex];
+        if (guest.status === 'present') return;
+        
+        guest.status = 'present';
+        await saveGuestsToFirebase();
+        renderTable();
+    };
+
+    // CRUD Logic
+    const modal = document.getElementById('guest-modal');
+    
+    document.getElementById('btn-add-guest').addEventListener('click', () => {
+        document.getElementById('modal-id').value = '';
+        document.getElementById('modal-name').value = '';
+        document.getElementById('modal-unit').value = '';
+        document.getElementById('modal-seat-row').value = '';
+        if(document.getElementById('modal-seat-side')) document.getElementById('modal-seat-side').value = '';
+        document.getElementById('modal-seat-num').innerHTML = '<option value="">-- Số --</option>';
+        document.getElementById('modal-seat-num').disabled = true;
+        document.getElementById('modal-title').textContent = "Thêm Khách Mời Mới";
+        modal.classList.remove('hidden');
+    });
+
+    const seatRowSelect = document.getElementById('modal-seat-row');
+    const seatSideSelect = document.getElementById('modal-seat-side');
+    const seatNumSelect = document.getElementById('modal-seat-num');
+
+    seatRowSelect.addEventListener('change', () => populateSeatNumbers());
+    if(seatSideSelect) seatSideSelect.addEventListener('change', () => populateSeatNumbers());
+
+    function populateSeatNumbers(currentAllowedSeat = null) {
+        const row = seatRowSelect.value;
+        const side = seatSideSelect ? seatSideSelect.value : null;
+        seatNumSelect.innerHTML = '<option value="">-- Số --</option>';
+        if (!row || !side) {
+            seatNumSelect.disabled = true;
+            return;
+        }
+        
+        seatNumSelect.disabled = false;
+        
+        let availableSeats = [];
+        if (side === 'left') {
+            for(let i=1; i<=95; i+=2) availableSeats.push(i);
+        } else {
+            for(let i=2; i<=96; i+=2) availableSeats.push(i);
+        }
+        
+        availableSeats.forEach(seatNum => {
+            const fullSeatId = `${row}${seatNum}`;
+            let isOccupied = false;
+            let guestName = '';
+            
+            const existingGuest = window.guestsData.find(g => g.seat === fullSeatId);
+            if (existingGuest && fullSeatId !== currentAllowedSeat) {
+                isOccupied = true;
+                guestName = existingGuest.name;
+            }
+            
+            const option = document.createElement('option');
+            option.value = seatNum;
+            if (isOccupied) {
+                option.textContent = `${seatNum} (Đã có: ${guestName})`;
+                option.disabled = true;
+            } else {
+                option.textContent = `${seatNum} (Trống)`;
+            }
+            seatNumSelect.appendChild(option);
+        });
+    }
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    window.editGuest = function(id) {
+        const guest = window.guestsData.find(g => g.id === id);
+        if(!guest) return;
+        document.getElementById('modal-id').value = guest.id;
+        document.getElementById('modal-name').value = guest.name;
+        document.getElementById('modal-unit').value = guest.unit;
+        
+        if (guest.seat && guest.seat.match(/^[A-E]\d+$/)) {
+            const row = guest.seat.charAt(0);
+            const numStr = guest.seat.substring(1);
+            const num = parseInt(numStr);
+            document.getElementById('modal-seat-row').value = row;
+            if(document.getElementById('modal-seat-side')) {
+                document.getElementById('modal-seat-side').value = (num % 2 !== 0) ? 'left' : 'right';
+            }
+            populateSeatNumbers(guest.seat);
+            document.getElementById('modal-seat-num').value = numStr;
+        } else {
+            document.getElementById('modal-seat-row').value = '';
+            if(document.getElementById('modal-seat-side')) document.getElementById('modal-seat-side').value = '';
+            document.getElementById('modal-seat-num').innerHTML = '<option value="">-- Số --</option>';
+            document.getElementById('modal-seat-num').disabled = true;
+        }
+        
+        document.getElementById('modal-title').textContent = "Cập Nhật Thông Tin";
+        modal.classList.remove('hidden');
+    };
+
+    window.deleteGuest = async function(id) {
+        if(!confirm("Bạn có chắc chắn muốn xóa khách này khỏi danh sách? Hành động này sẽ thay đổi thứ tự ghế!")) return;
+        
+        const guest = window.guestsData.find(g => g.id === id);
+        if (guest && guest.seat) {
+            // Trigger shift logic as if they were absent
+            await window.markAbsent(guest.id); 
+        }
+
+        window.guestsData = window.guestsData.filter(g => g.id !== id);
+        await saveGuestsToFirebase();
+        renderTable();
+    };
+
+    document.getElementById('btn-save-guest').addEventListener('click', async () => {
+        const id = document.getElementById('modal-id').value;
+        const name = document.getElementById('modal-name').value;
+        const unit = document.getElementById('modal-unit').value;
+        const row = document.getElementById('modal-seat-row').value;
+        const num = document.getElementById('modal-seat-num').value;
+        
+        let seat = '';
+        if (row && num) {
+            seat = `${row}${num}`;
+        }
+        if(!name || !unit) return alert("Vui lòng nhập họ tên và đơn vị!");
+
+        if(id) {
+            // Edit
+            const guest = window.guestsData.find(g => g.id === id);
+            guest.name = name;
+            guest.unit = unit;
+            guest.seat = seat;
+        } else {
+            // Add
+            const newId = 'g' + Date.now();
+            window.guestsData.push({
+                id: newId, name, unit, seat, status: 'empty'
+            });
+        }
+        
+        modal.classList.add('hidden');
+        await saveGuestsToFirebase();
+        renderTable();
+    });
+
+    async function saveGuestsToFirebase() {
+        if (window.updateFirebaseGuests) {
+            await window.updateFirebaseGuests(window.guestsData);
+        } else {
+            // Fallback for offline mode or if updateFirebaseGuests is not injected
+            localStorage.setItem('cachedGuestsData', JSON.stringify(window.guestsData));
+            window.dispatchEvent(new Event('guestsDataUpdated'));
+        }
+    }
+
+    // --- SOS INCIDENT LOGIC ---
+    let activeIncidents = {};
+    const alertAudio = new Audio('data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'); // Fallback dummy audio, in real life we use AudioContext beep.
+    let beepInterval;
+
+    function playBeep() {
+        if(beepInterval) return;
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if(ctx.state === 'suspended') ctx.resume();
+        beepInterval = setInterval(() => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, ctx.currentTime);
+            gain.gain.setValueAtTime(1, ctx.currentTime);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+            osc.stop(ctx.currentTime + 0.5);
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        }, 1500);
+    }
+
+    function stopBeep() {
+        if(beepInterval) {
+            clearInterval(beepInterval);
+            beepInterval = null;
+        }
+    }
+
+    window.addEventListener('incidentsUpdated', (e) => {
+        if (dashboardScreen.classList.contains('hidden')) return;
+        const incidents = e.detail;
+        
+        // Filter incidents based on my zone
+        const myZone = currentStaff ? currentStaff.zone : 'ALL';
+        const relevantIncidents = Object.values(incidents).filter(inc => {
+            if (!inc) return false;
+            if (inc.status !== 'active' && inc.status !== 'in_progress') return false;
+            if (myZone === 'ALL') return true;
+            
+            const match = (inc.seat || '').match(/^([A-E])(\d+)$/);
+            if (!match) return false;
+            
+            const isEven = parseInt(match[2]) % 2 === 0;
+            if (myZone === 'ODD' && !isEven) return true;
+            if (myZone === 'EVEN' && isEven) return true;
+            return false;
+        });
+        
+        if (relevantIncidents.length > 0) {
+            // Sort to prioritize active over in_progress
+            relevantIncidents.sort((a, b) => {
+                if (a.status === 'active' && b.status !== 'active') return -1;
+                if (a.status !== 'active' && b.status === 'active') return 1;
+                return b.timestamp - a.timestamp;
+            });
+            
+            const currentInc = relevantIncidents[0]; // Show highest priority
+            showIncidentAlert(currentInc);
+        } else {
+            document.getElementById('incident-modal').classList.add('hidden');
+            stopBeep();
+        }
+    });
+
+    function showIncidentAlert(inc) {
+        document.getElementById('incident-name').textContent = inc.guestName || "Không xác định";
+        document.getElementById('incident-seat').textContent = inc.seat || "Không rõ";
+        document.getElementById('incident-reason').textContent = inc.issueType || "Cần hỗ trợ";
+        document.getElementById('incident-id-hidden').value = inc.id;
+        document.getElementById('incident-status-hidden').value = inc.status;
+        
+        const wrapper = document.getElementById('incident-wrapper');
+        const headerBg = document.getElementById('incident-header-bg');
+        const title = document.getElementById('incident-title');
+        const subtitle = document.getElementById('incident-subtitle');
+        const btnClaim = document.getElementById('btn-claim-incident');
+        const btnResolve = document.getElementById('btn-resolve-incident');
+
+        if (inc.status === 'active') {
+            // RED ALERT
+            wrapper.classList.add('border-error', 'animate-pulse');
+            wrapper.classList.remove('border-yellow-500');
+            headerBg.classList.add('bg-error');
+            headerBg.classList.remove('bg-yellow-500');
+            title.textContent = "CẢNH BÁO SỰ CỐ!";
+            subtitle.classList.add('hidden');
+            
+            btnClaim.classList.remove('hidden');
+            btnResolve.classList.add('hidden');
+            
+            playBeep();
+        } else if (inc.status === 'in_progress') {
+            // YELLOW ALERT
+            wrapper.classList.remove('border-error', 'animate-pulse');
+            wrapper.classList.add('border-yellow-500');
+            headerBg.classList.remove('bg-error');
+            headerBg.classList.add('bg-yellow-500');
+            title.textContent = "ĐANG ĐƯỢC XỬ LÝ";
+            subtitle.textContent = `Bởi: ${inc.handlerName}`;
+            subtitle.classList.remove('hidden');
+            
+            btnClaim.classList.add('hidden');
+            
+            if (currentStaff && currentStaff.id === inc.handlerId) {
+                btnResolve.classList.remove('hidden');
+            } else {
+                btnResolve.classList.add('hidden');
+            }
+            
+            stopBeep();
+        }
+        
+        document.getElementById('incident-modal').classList.remove('hidden');
+    }
+
+    // The event listener for btn-resolve-incident is moved below the modal HTML
+</script>
+
+<!-- Incident Alert Modal -->
+<div id="incident-modal" class="fixed inset-0 bg-black/80 z-[999] flex items-center justify-center hidden backdrop-blur-md px-4">
+    <div id="incident-wrapper" class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border-4 border-error animate-pulse">
+        <div id="incident-header-bg" class="bg-error px-6 py-6 text-center transition-colors">
+            <span class="material-symbols-outlined text-white text-6xl mb-2">warning</span>
+            <h2 id="incident-title" class="text-white font-headline-md font-black uppercase tracking-widest">CẢNH BÁO SỰ CỐ!</h2>
+            <p id="incident-subtitle" class="text-white/90 text-sm hidden font-bold mt-1">Đang được Nguyễn Văn A xử lý</p>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="space-y-1">
+                <p class="text-on-surface-variant font-label-bold uppercase text-sm">Khách mời:</p>
+                <p id="incident-name" class="font-body-lg font-bold text-on-surface text-xl">Nguyễn Văn A</p>
+            </div>
+            <div class="space-y-1">
+                <p class="text-on-surface-variant font-label-bold uppercase text-sm">Vị trí ghế:</p>
+                <p id="incident-seat" class="font-headline-sm font-black text-error text-2xl">A1-12</p>
+            </div>
+            <div class="space-y-1">
+                <p class="text-on-surface-variant font-label-bold uppercase text-sm">Vấn đề:</p>
+                <p id="incident-reason" class="font-body-md text-on-surface bg-red-50 p-3 rounded-lg border border-red-100">Ghế đang bị người lạ chiếm dụng</p>
+            </div>
+            <input type="hidden" id="incident-id-hidden">
+            <input type="hidden" id="incident-status-hidden">
+            
+            <button id="btn-claim-incident" class="w-full h-14 bg-error hover:bg-red-700 text-white font-headline-sm rounded-xl shadow-lg active:scale-95 transition-transform mt-4 uppercase tracking-wider hidden">
+                TÔI SẼ ĐI XỬ LÝ
+            </button>
+            <button id="btn-resolve-incident" class="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-headline-sm rounded-xl shadow-lg active:scale-95 transition-transform mt-4 uppercase tracking-wider hidden">
+                HOÀN TẤT XỬ LÝ
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('btn-claim-incident').addEventListener('click', async () => {
+        const id = document.getElementById('incident-id-hidden').value;
+        if(id && currentStaff) {
+            await window.claimIncident(id, currentStaff.id, currentStaff.name);
+        }
+    });
+
+    document.getElementById('btn-resolve-incident').addEventListener('click', async () => {
+        const id = document.getElementById('incident-id-hidden').value;
+        if(id) {
+            await window.resolveIncident(id);
+        }
+        document.getElementById('incident-modal').classList.add('hidden');
+        if (typeof stopBeep === 'function') stopBeep();
+    });
+
+    // --- EXCEL IMPORT LOGIC ---
+    const importModal = document.getElementById('import-modal');
+    const btnImport = document.getElementById('btn-import-excel');
+    const btnCloseImport = document.getElementById('btn-close-import-modal');
+    const btnDownloadTemplate = document.getElementById('btn-download-template');
+    const dropzone = document.getElementById('excel-dropzone');
+    const fileInput = document.getElementById('excel-file-input');
+    const previewArea = document.getElementById('import-preview-area');
+    const previewTableBody = document.getElementById('preview-table-body');
+    const btnConfirmImport = document.getElementById('btn-confirm-import');
+    const previewStats = document.getElementById('preview-stats');
+    
+    let parsedExcelData = [];
+
+    btnImport.addEventListener('click', () => {
+        importModal.classList.remove('hidden');
+        resetImportUI();
+    });
+
+    btnCloseImport.addEventListener('click', () => {
+        importModal.classList.add('hidden');
+    });
+
+    function resetImportUI() {
+        fileInput.value = '';
+        previewArea.classList.add('hidden');
+        previewArea.classList.remove('flex');
+        dropzone.classList.remove('hidden');
+        btnConfirmImport.disabled = true;
+        parsedExcelData = [];
+    }
+
+    btnDownloadTemplate.addEventListener('click', () => {
+        const ws_data = [
+            ["Họ và Tên", "Đơn Vị Công Tác", "Mã Ghế"],
+            ["Nguyễn Văn A", "UBND Tỉnh", "A12"],
+            ["Trần Thị B", "Sở Y Tế", "B3"]
+        ];
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        ws['!cols'] = [{wch: 30}, {wch: 30}, {wch: 15}];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "DanhSachKhachMoi");
+        XLSX.writeFile(wb, "Template_KhachMoi.xlsx");
+    });
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('bg-blue-100'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('bg-blue-100'));
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('bg-blue-100');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) handleExcelFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) handleExcelFile(e.target.files[0]);
+    });
+
+    function handleExcelFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+            validateAndPreview(json);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function validateAndPreview(rows) {
+        if (rows.length < 2) return alert("File không có dữ liệu!");
+
+        parsedExcelData = [];
+        let validCount = 0;
+        let errorCount = 0;
+        const seatSet = new Set();
+        
+        previewTableBody.innerHTML = '';
+
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            if (!row || row.length === 0 || (!row[0] && !row[1] && !row[2] && !row[3])) continue;
+            
+            const name = (row[0] || '').toString().trim();
+            const unit = (row[1] || '').toString().trim();
+            const seatCode = (row[2] || '').toString().trim().toUpperCase();
+            
+            let seat = '';
+            let errorMsg = '';
+            
+            if (!name) errorMsg = "Thiếu Họ Tên";
+            else if (!unit) errorMsg = "Thiếu Đơn vị";
+            else if (seatCode) {
+                const match = seatCode.match(/^([A-E])(\d+)$/);
+                if (!match) {
+                    errorMsg = "Mã ghế sai định dạng (VD: A12, B5)";
+                } else {
+                    const parsedNum = parseInt(match[2]);
+                    if (isNaN(parsedNum) || parsedNum < 1 || parsedNum > 96) {
+                        errorMsg = "Số ghế không hợp lệ (1-96)";
+                    } else {
+                        seat = seatCode;
+                        if (seatSet.has(seat)) {
+                            errorMsg = "Trùng ghế trong file Excel";
+                        } else {
+                            seatSet.add(seat);
+                        }
+                    }
+                }
+            }
+            
+            const tr = document.createElement('tr');
+            if (errorMsg) { errorCount++; tr.classList.add('bg-red-50'); } else { validCount++; }
+            
+            parsedExcelData.push({ name, unit, seat, isValid: !errorMsg, errorMsg });
+            
+            tr.innerHTML = `
+                <td class="p-2 border-b">${i}</td>
+                <td class="p-2 border-b font-bold ${!name ? 'text-red-500' : ''}">${name || '(Trống)'}</td>
+                <td class="p-2 border-b">${unit || '(Trống)'}</td>
+                <td class="p-2 border-b font-mono ${errorMsg && seat ? 'text-red-500 font-bold' : ''}">${seat || '(Không xếp)'}</td>
+                <td class="p-2 border-b text-xs font-bold ${errorMsg ? 'text-red-600' : 'text-green-600'}">${errorMsg || 'Hợp lệ'}</td>
+            `;
+            previewTableBody.appendChild(tr);
+        }
+        
+        previewStats.textContent = `Đã quét: ${validCount} hợp lệ, ${errorCount} lỗi`;
+        if (errorCount > 0) previewStats.className = 'text-red-600';
+        else previewStats.className = 'text-green-600';
+        
+        dropzone.classList.add('hidden');
+        previewArea.classList.remove('hidden');
+        previewArea.classList.add('flex');
+        
+        btnConfirmImport.disabled = (validCount === 0);
+        recheckAppendConflicts();
+    }
+    
+    function recheckAppendConflicts() {
+        const mode = document.querySelector('input[name="import-mode"]:checked').value;
+        const rows = previewTableBody.querySelectorAll('tr');
+        
+        const existingSeats = new Set();
+        if (mode === 'append') {
+            window.guestsData.forEach(g => { if (g.seat) existingSeats.add(g.seat); });
+        }
+        
+        let conflictCount = 0;
+        parsedExcelData.forEach((data, index) => {
+            if (!data.isValid) return;
+            const tr = rows[index];
+            const statusTd = tr.querySelector('td:last-child');
+            
+            if (mode === 'append' && data.seat && existingSeats.has(data.seat)) {
+                tr.classList.add('bg-orange-50');
+                statusTd.textContent = 'Trùng ghế (Bỏ qua)';
+                statusTd.className = 'p-2 border-b text-xs font-bold text-orange-600';
+                data.isConflict = true;
+                conflictCount++;
+            } else {
+                tr.classList.remove('bg-orange-50');
+                statusTd.textContent = 'Hợp lệ';
+                statusTd.className = 'p-2 border-b text-xs font-bold text-green-600';
+                data.isConflict = false;
+            }
+        });
+        
+        if (conflictCount > 0) previewStats.textContent += ` - Cảnh báo: ${conflictCount} trùng trên Hệ thống`;
+    }
+    
+    document.querySelectorAll('input[name="import-mode"]').forEach(r => r.addEventListener('change', recheckAppendConflicts));
+
+    btnConfirmImport.addEventListener('click', async () => {
+        const mode = document.querySelector('input[name="import-mode"]:checked').value;
+        
+        if (mode === 'replace') {
+            if(!confirm("CẢNH BÁO: Chế độ 'Ghi đè' sẽ XÓA SẠCH danh sách và lịch sử Check-in hiện tại. Bạn có chắc chắn?")) return;
+            window.guestsData = [];
+        }
+        
+        let importCount = 0;
+        parsedExcelData.forEach(data => {
+            if (!data.isValid) return;
+            if (mode === 'append' && data.isConflict) return;
+            
+            const newId = 'g' + Date.now() + Math.floor(Math.random()*1000) + importCount;
+            window.guestsData.push({
+                id: newId, name: data.name, unit: data.unit, seat: data.seat, status: 'empty'
+            });
+            importCount++;
+        });
+        
+        if (importCount > 0) {
+            btnConfirmImport.disabled = true;
+            btnConfirmImport.textContent = "ĐANG LƯU...";
+            await saveGuestsToFirebase();
+            renderTable();
+            alert(`Đã import thành công ${importCount} khách mời!`);
+            importModal.classList.add('hidden');
+            btnConfirmImport.textContent = "XÁC NHẬN LƯU LÊN HỆ THỐNG";
+        } else {
+            alert("Không có dữ liệu hợp lệ nào được import!");
+        }
+    });
+
+</script>
+
+</body>
+</html>

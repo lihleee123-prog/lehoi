@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Festival For Peace - Seat Lookup</title>
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#3e2c2a",
+                        "tertiary-container": "#00799c",
+                        "outline": "#8f6f6c",
+                        "on-tertiary-fixed-variant": "#004d65",
+                        "outline-variant": "#e4beba",
+                        "tertiary-fixed-dim": "#7bd1f8",
+                        "surface-container": "#ffe9e7",
+                        "secondary-container": "#fd867d",
+                        "surface-bright": "#fff8f7",
+                        "on-tertiary-fixed": "#001f2a",
+                        "secondary": "#9f3f39",
+                        "on-secondary-fixed-variant": "#802824",
+                        "secondary-fixed": "#ffdad6",
+                        "on-secondary-fixed": "#410003",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#410003",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#ffedeb",
+                        "on-tertiary-container": "#e9f7ff",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "on-background": "#271816",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fff8f7",
+                        "on-surface-variant": "#5b403d",
+                        "primary-container": "#d32f2f",
+                        "on-primary-fixed-variant": "#930010",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f7",
+                        "on-surface": "#271816",
+                        "on-primary-container": "#fff2f0",
+                        "surface-container-high": "#ffe2de",
+                        "on-secondary-container": "#741e1c",
+                        "secondary-fixed-dim": "#ffb3ac",
+                        "tertiary": "#005f7b",
+                        "surface-container-highest": "#f9dcd9",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#f9dcd9",
+                        "primary": "#af101a",
+                        "inverse-primary": "#ffb3ac",
+                        "tertiary-fixed": "#bee9ff",
+                        "surface-dim": "#f1d3d0",
+                        "surface-tint": "#ba1a20",
+                        "primary-fixed": "#ffdad6",
+                        "surface-container-low": "#fff0ef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .bg-main {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhMjjTTZgd4_vHjQSWWAO1YUSLUGU-nU_jEl1B2o3pIjgnGfymVmrzdR74Ui5LhjS4oIZRx78Etct46Ygeg6mhTf_lYLfPWZQ96S75F4ty6KNuke0gS39jne5MQc5U0ZmFoZz7-tsKmnMJ2tiYqg-DEUMVpW5NAuj4Q0SJvw5rImBJ3DYIbjTi1hM4F2tIAWbo8si_EnWFECM9XORnafyeGnu71YxACu54Qwe_Dh7PCZPjkHDU6drJvSljLcRNMdzgnqNTOUsHv7w');
+            background-size: cover;
+            background-position: center;
+        }
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple-effect::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+        .ripple-effect:active::after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+    </style>
+</head>
+<body class="bg-main h-screen w-full flex flex-col font-body-md text-on-surface overflow-hidden">
+<script src="core.js"></script>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-gradient-to-b from-black/40 to-transparent">
+<div class="flex items-center gap-3">
+<img alt="Quảng Trị Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt9_8rGgFI0M7PCkiRy7XVcJsSdqtXbbIsvM8Mawx4IHA4CYs85-KrzdL2VpYv5YRxHwzSeNXmsiMJGXEHeBKsHEPZzxxnTksKxx9pbKxvhN13nSDIe8I-PlCjxlkGecWLu0auSHYinDEswe6anf1ykJXYdZtOZ0KzcyBiJOKtiXa4LCeesR77RAIKOLSZgvHR7tlfG6L1gA74Q3PPtVyOachqUXAxR3vKyjQBn8FNPjIAJ2PbpvLxf2bNye29eLLLX8w3PLyXd_8"/>
+<h1 class="text-white font-headline-md font-bold tracking-tight">LỄ HỘI VÌ HOÀ BÌNH</h1>
+</div>
+<a href="admin.html" title="Đăng nhập Admin" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+</a>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex items-center justify-center px-4 pb-24 pt-16">
+<div class="glass-card w-full max-w-md rounded-[32px] p-8 shadow-2xl space-y-8 animate-in fade-in zoom-in duration-500">
+<div class="text-center space-y-2">
+<h2 class="font-headline-md text-primary font-extrabold tracking-tight">TRA CỨU VỊ TRÍ CHỖ NGỒI</h2>
+<p class="text-on-surface-variant font-body-md opacity-80">Vui lòng nhập thông tin để tìm kiếm</p>
+</div>
+<div class="space-y-4">
+<!-- Input Field: Organization -->
+<div class="group">
+<label class="block text-label-bold text-on-surface-variant mb-2 ml-1">Đơn vị công tác</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-tertiary" data-icon="business">business</span>
+<select id="input-unit" class="w-full h-14 pl-12 pr-4 bg-white/60 border-none rounded-2xl ring-1 ring-white/50 focus:ring-2 focus:ring-primary focus:bg-white transition-all outline-none text-on-surface shadow-inner cursor-pointer">
+<option value="" disabled selected hidden>Chọn cơ quan, tổ chức</option>
+</select>
+</div>
+</div>
+<!-- Input Field: Full Name -->
+<div class="group relative z-50">
+<label class="block text-label-bold text-on-surface-variant mb-2 ml-1">Họ và Tên</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-tertiary" data-icon="person">person</span>
+<input id="input-name" autocomplete="off" class="w-full h-14 pl-12 pr-4 bg-white/60 border-none rounded-2xl ring-1 ring-white/50 focus:ring-2 focus:ring-primary focus:bg-white transition-all outline-none text-on-surface placeholder:text-outline/60 shadow-inner" placeholder="Nhập họ và tên khách mời" type="text"/>
+<div id="autocomplete-list" class="absolute top-[60px] left-0 w-full bg-white rounded-2xl shadow-xl z-50 overflow-hidden hidden max-h-60 overflow-y-auto border border-outline-variant/30"></div>
+</div>
+<p id="search-error" class="text-error font-label-bold mt-2 hidden text-center">Không tìm thấy khách mời. Vui lòng kiểm tra lại!</p>
+</div>
+</div>
+<!-- Primary Action Button -->
+<button id="search-btn" class="w-full h-14 bg-gradient-to-r from-primary to-secondary text-white font-headline-md rounded-2xl shadow-lg shadow-primary/30 active:scale-95 transition-transform duration-150 ripple-effect uppercase tracking-wider">
+                TÌM KIẾM CHỖ NGỒI
+            </button>
+<!-- Decorative Motif -->
+<div class="flex justify-center pt-2 opacity-20">
+<span class="material-symbols-outlined text-6xl" data-icon="dove">done</span>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 glass-nav flex flex-col px-4 pb-2 pt-3 rounded-t-3xl">
+<div class="flex justify-around items-center w-full">
+<!-- Lookup Tab (Active) -->
+<a class="flex flex-1 flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-2 transition-all duration-300" href="index.html">
+<span class="material-symbols-outlined mb-0.5" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-sm">Tìm kiếm</span>
+</a>
+<!-- Map Tab -->
+<a class="flex flex-1 flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300 px-4" href="index2.html">
+<span class="material-symbols-outlined mb-0.5" data-icon="map">map</span>
+<span class="font-label-sm">Sơ đồ</span>
+</a>
+</div>
+<div class="mt-3 mb-1 text-center text-on-surface-variant text-[10px] font-medium opacity-80">
+© Một sản phẩm của Linh Lê - Người con của mảnh đất Vĩnh Linh
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for input fields
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('scale-[1.02]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('scale-[1.02]');
+            });
+        });
+
+        // Initialize App and Autocomplete
+        window.initApp(() => {
+            const inputUnit = document.getElementById('input-unit');
+            const inputName = document.getElementById('input-name');
+            const autocompleteList = document.getElementById('autocomplete-list');
+            let currentNames = [];
+
+            function populateUnits() {
+                // Save current selected value
+                const currentVal = inputUnit.value;
+                
+                inputUnit.innerHTML = '<option value="" disabled selected hidden>Chọn cơ quan, tổ chức</option>';
+                const units = [...new Set(window.guestsData.map(g => g.unit))].sort();
+                units.forEach(unit => {
+                    const opt = document.createElement('option');
+                    opt.value = unit;
+                    opt.textContent = unit;
+                    inputUnit.appendChild(opt);
+                });
+                
+                // Restore selected value if still exists
+                if (currentVal && units.includes(currentVal)) {
+                    inputUnit.value = currentVal;
+                }
+            }
+
+            // Update current valid names based on unit
+            function updateNames() {
+                const selectedUnit = inputUnit.value;
+                const filtered = window.guestsData.filter(g => !selectedUnit || g.unit === selectedUnit);
+                currentNames = filtered.map(g => g.name);
+            }
+
+            // Initial population
+            populateUnits();
+            updateNames();
+
+            inputUnit.addEventListener('change', updateNames);
+            
+            // Listen for Firebase data updates
+            window.addEventListener('guestsDataUpdated', () => {
+                populateUnits();
+                updateNames();
+            });
+            
+            // Custom Autocomplete Logic
+            inputName.addEventListener('input', function() {
+                const val = this.value;
+                autocompleteList.innerHTML = '';
+                if (!val) {
+                    autocompleteList.classList.add('hidden');
+                    return;
+                }
+                
+                const searchStr = window.removeAccents(val).trim().replace(/\s+/g, ' ');
+                // Use a Set to avoid duplicate names in autocomplete
+                const uniqueMatches = [...new Set(currentNames.filter(name => 
+                    window.removeAccents(name).trim().replace(/\s+/g, ' ').includes(searchStr)
+                ))];
+                
+                if (uniqueMatches.length > 0) {
+                    autocompleteList.classList.remove('hidden');
+                    uniqueMatches.forEach(name => {
+                        const item = document.createElement("DIV");
+                        item.className = "px-4 py-3 hover:bg-surface-container cursor-pointer text-body-md border-b border-outline-variant/20 last:border-0";
+                        item.textContent = name;
+                        item.addEventListener("click", function() {
+                            inputName.value = name;
+                            autocompleteList.classList.add('hidden');
+                        });
+                        autocompleteList.appendChild(item);
+                    });
+                } else {
+                    autocompleteList.classList.add('hidden');
+                }
+            });
+            
+            // Hide autocomplete when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== inputName && e.target !== autocompleteList) {
+                    autocompleteList.classList.add('hidden');
+                }
+            });
+        });
+
+        // Search button click effect and logic
+        const searchBtn = document.getElementById('search-btn');
+        
+        document.getElementById('input-name').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchBtn.click();
+            }
+        });
+
+        searchBtn.addEventListener('click', function() {
+            const btn = this;
+            const originalText = btn.innerHTML;
+            
+            const inputName = document.getElementById('input-name').value.trim();
+            const inputUnit = document.getElementById('input-unit').value;
+            const errorEl = document.getElementById('search-error');
+            
+            if (!inputUnit || !inputName) {
+                errorEl.textContent = "Vui lòng chọn đơn vị và nhập họ tên!";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            
+            btn.innerHTML = '<span class="flex items-center gap-2"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> ĐANG TÌM KIẾM...</span>';
+            
+            setTimeout(() => {
+                const nameVal = window.removeAccents(inputName).replace(/\s+/g, ' ');
+                const unitVal = inputUnit; 
+                
+                // Find guest with normalized string comparison
+                let match = window.guestsData.find(g => 
+                    window.removeAccents(g.name).trim().replace(/\s+/g, ' ') === nameVal && 
+                    g.unit === unitVal
+                );
+                
+                if (match) {
+                    if (!match.seat) {
+                        errorEl.textContent = "Khách mời này chưa được xếp chỗ hoặc đã bị hủy ghế!";
+                        errorEl.classList.remove('hidden');
+                        btn.innerHTML = originalText;
+                        return;
+                    }
+
+                    // Check if they are already checked in (either locally or globally)
+                    const savedGuestId = localStorage.getItem('myCheckedInGuest');
+                    const myGuests = JSON.parse(localStorage.getItem('myCheckedInGuests') || '[]');
+                    const isOccupied = window.seatStatusMap[match.seat] === 'occupied' || match.status === 'present';
+                    
+                    // Allow if the guest is in our myGuests array, OR if it's the savedGuestId
+                    const isMyGuest = myGuests.includes(match.id) || String(savedGuestId) === String(match.id);
+
+                    if (isOccupied && !isMyGuest) {
+                        errorEl.textContent = "Chỗ ngồi này đã có người ngồi, vui lòng kiểm tra và nhập lại!";
+                        errorEl.classList.remove('hidden');
+                        btn.innerHTML = originalText;
+                        return;
+                    }
+
+                    if (!isOccupied) {
+                        // Not checked in yet, perform check-in
+                        window.checkInUser(match);
+                    } else {
+                        // isOccupied && isMyGuest
+                        // Already checked in on THIS device, just proceed to map.
+                        // Set them as the active guest so the map highlights their seat correctly
+                        localStorage.setItem('myCheckedInGuest', match.id);
+                        window.myCheckedInGuest = match.id;
+                    }
+                    
+                    errorEl.classList.add('hidden');
+                    window.location.href = 'index2.html';
+                } else {
+                    errorEl.textContent = "Không tìm thấy khách mời. Vui lòng kiểm tra lại!";
+                    errorEl.classList.remove('hidden');
+                    btn.innerHTML = originalText;
+                }
+            }, 800);
+        });
+    </script>
+</body>
+</html>

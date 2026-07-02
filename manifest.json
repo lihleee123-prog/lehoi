@@ -1,0 +1,21 @@
+{
+  "name": "Lễ hội Vì Hòa Bình",
+  "short_name": "Lễ hội VHB",
+  "description": "Tra cứu và tìm vị trí chỗ ngồi sự kiện Lễ hội Vì Hòa Bình.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff8f7",
+  "theme_color": "#ba1a20",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuBt9_8rGgFI0M7PCkiRy7XVcJsSdqtXbbIsvM8Mawx4IHA4CYs85-KrzdL2VpYv5YRxHwzSeNXmsiMJGXEHeBKsHEPZzxxnTksKxx9pbKxvhN13nSDIe8I-PlCjxlkGecWLu0auSHYinDEswe6anf1ykJXYdZtOZ0KzcyBiJOKtiXa4LCeesR77RAIKOLSZgvHR7tlfG6L1gA74Q3PPtVyOachqUXAxR3vKyjQBn8FNPjIAJ2PbpvLxf2bNye29eLLLX8w3PLyXd_8",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuBt9_8rGgFI0M7PCkiRy7XVcJsSdqtXbbIsvM8Mawx4IHA4CYs85-KrzdL2VpYv5YRxHwzSeNXmsiMJGXEHeBKsHEPZzxxnTksKxx9pbKxvhN13nSDIe8I-PlCjxlkGecWLu0auSHYinDEswe6anf1ykJXYdZtOZ0KzcyBiJOKtiXa4LCeesR77RAIKOLSZgvHR7tlfG6L1gA74Q3PPtVyOachqUXAxR3vKyjQBn8FNPjIAJ2PbpvLxf2bNye29eLLLX8w3PLyXd_8",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

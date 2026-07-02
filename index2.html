@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Festival For Peace - Seat Allocation</title>
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#3e2c2a",
+                        "tertiary-container": "#00799c",
+                        "outline": "#8f6f6c",
+                        "on-tertiary-fixed-variant": "#004d65",
+                        "outline-variant": "#e4beba",
+                        "tertiary-fixed-dim": "#7bd1f8",
+                        "surface-container": "#ffe9e7",
+                        "secondary-container": "#fd867d",
+                        "surface-bright": "#fff8f7",
+                        "on-tertiary-fixed": "#001f2a",
+                        "secondary": "#9f3f39",
+                        "on-secondary-fixed-variant": "#802824",
+                        "secondary-fixed": "#ffdad6",
+                        "on-secondary-fixed": "#410003",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#410003",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#ffedeb",
+                        "on-tertiary-container": "#e9f7ff",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "on-background": "#271816",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fff8f7",
+                        "on-surface-variant": "#5b403d",
+                        "primary-container": "#d32f2f",
+                        "on-primary-fixed-variant": "#930010",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f7",
+                        "on-surface": "#271816",
+                        "on-primary-container": "#fff2f0",
+                        "surface-container-high": "#ffe2de",
+                        "on-secondary-container": "#741e1c",
+                        "secondary-fixed-dim": "#ffb3ac",
+                        "tertiary": "#005f7b",
+                        "surface-container-highest": "#f9dcd9",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#f9dcd9",
+                        "primary": "#af101a",
+                        "inverse-primary": "#ffb3ac",
+                        "tertiary-fixed": "#bee9ff",
+                        "surface-dim": "#f1d3d0",
+                        "surface-tint": "#ba1a20",
+                        "primary-fixed": "#ffdad6",
+                        "surface-container-low": "#fff0ef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 6px;
+        }
+        @media (max-width: 768px) {
+            .seat-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+        .background-blur-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.4) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen text-on-background relative overflow-x-hidden">
+<script src="core.js"></script>
+<!-- Background Image -->
+<div class="fixed inset-0 z-0 overflow-hidden">
+<img alt="Festival background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMjjTTZgd4_vHjQSWWAO1YUSLUGU-nU_jEl1B2o3pIjgnGfymVmrzdR74Ui5LhjS4oIZRx78Etct46Ygeg6mhTf_lYLfPWZQ96S75F4ty6KNuke0gS39jne5MQc5U0ZmFoZz7-tsKmnMJ2tiYqg-DEUMVpW5NAuj4Q0SJvw5rImBJ3DYIbjTi1hM4F2tIAWbo8si_EnWFECM9XORnafyeGnu71YxACu54Qwe_Dh7PCZPjkHDU6drJvSljLcRNMdzgnqNTOUsHv7w"/>
+<div class="absolute inset-0 background-blur-overlay"></div>
+</div>
+<!-- Header Section (TopAppBar Anchor) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface/20 backdrop-blur-md border-b border-white/20">
+<div class="flex items-center gap-3">
+<img alt="Festival Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt9_8rGgFI0M7PCkiRy7XVcJsSdqtXbbIsvM8Mawx4IHA4CYs85-KrzdL2VpYv5YRxHwzSeNXmsiMJGXEHeBKsHEPZzxxnTksKxx9pbKxvhN13nSDIe8I-PlCjxlkGecWLu0auSHYinDEswe6anf1ykJXYdZtOZ0KzcyBiJOKtiXa4LCeesR77RAIKOLSZgvHR7tlfG6L1gA74Q3PPtVyOachqUXAxR3vKyjQBn8FNPjIAJ2PbpvLxf2bNye29eLLLX8w3PLyXd_8"/>
+<h1 class="text-white font-headline-md text-headline-md font-extrabold tracking-tight">LỄ HỘI VÌ HÒA BÌNH</h1>
+</div>
+<div class="hidden md:flex items-center gap-6">
+
+<a href="admin.html" title="Đăng nhập Admin" class="w-10 h-10 rounded-full bg-white/20 border border-white/40 flex items-center justify-center overflow-hidden hover:bg-white/30 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-white">admin_panel_settings</span>
+</a>
+</div>
+</header>
+<main class="relative z-10 pt-20 pb-32 px-container-padding max-w-4xl mx-auto space-y-gutter">
+<!-- Ticket Info Card -->
+<section class="glass-card rounded-xl p-6 shadow-xl animate-fade-in-up">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline-md text-headline-md text-primary font-bold">THÔNG TIN CHỖ NGỒI</h2>
+<div id="user-seat-display" class="bg-tertiary-container text-white px-4 py-1.5 rounded-full font-bold shadow-lg animate-pulse">
+                    VỊ TRÍ CỦA BẠN: --
+                </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">person</span>
+<span id="user-name-display" class="font-body-md text-body-md">Tên: ---</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">business</span>
+<span id="user-unit-display" class="font-body-md text-body-md">Đơn vị: ---</span>
+</div>
+</div>
+</section>
+<!-- Legend Card -->
+<section class="glass-card rounded-xl p-4 shadow-lg">
+<div class="flex flex-wrap justify-around items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 bg-tertiary rounded-sm"></div>
+<span class="font-label-sm text-label-sm">Đã có người ngồi</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 bg-white/60 border border-outline-variant rounded-sm"></div>
+<span class="font-label-sm text-label-sm">Còn trống</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 bg-[#FFD700] shadow-[inset_0_0_4px_rgba(255,255,255,0.8)] rounded-sm"></div>
+<span class="font-label-sm text-label-sm">VIP</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 bg-[#4CAF50] rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white font-bold" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-tertiary-container">Chỗ của bạn</span>
+</div>
+</div>
+</section>
+<!-- Main Map Section (Merged from index3.html) -->
+<section class="glass-card rounded-xl p-2 md:p-6 shadow-2xl relative overflow-hidden" style="min-height: 500px;">
+    <!-- Interactive Scroll Area -->
+    <div id="map-scroll-area" class="w-full h-[600px] overflow-auto cursor-grab active:cursor-grabbing relative hide-scrollbar" style="touch-action: pan-x pan-y;">
+        <div class="space-y-12 pb-16 min-w-max p-4" id="zoom-wrapper" style="transform-origin: top center; transition: transform 0.3s ease;">
+            <!-- Main Stage Block -->
+            <div class="relative group w-full max-w-4xl mx-auto">
+                <div class="w-full h-16 md:h-20 bg-error flex items-center justify-center rounded-xl shadow-lg transform transition-transform group-hover:scale-[1.02]">
+                    <div class="text-center text-white">
+                        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">theater_comedy</span>
+                        <p class="font-label-md block">SÂN KHẤU CHÍNH / MAIN STAGE</p>
+                    </div>
+                </div>
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary/40 rounded-full"></div>
+            </div>
+            <!-- Seating Grid Container -->
+            <div id="main-map-container" class="relative rounded-xl shadow-xl border-4 border-error/50 overflow-hidden flex flex-col w-max min-w-full mx-auto bg-[#DA251D]">
+            
+                <!-- TOP SECTION: Red Background -->
+                <div class="flex justify-between relative bg-[#DA251D]">
+                    <!-- Left Area: Seats -->
+                    <div class="flex-1 flex flex-col gap-6 md:gap-10 pt-4 md:pt-8 pb-4 md:pb-8 pl-4 md:pl-8 items-center overflow-visible">
+                        <!-- 5 rows VIP -->
+                        <div id="exact-map-grid" class="flex flex-col gap-6 md:gap-10 w-max overflow-visible">
+                        </div>
+                        <!-- Regular Seats (No Tables) -->
+                        <div id="rep-red-seats" class="flex justify-between mt-2 md:mt-4 w-full">
+                        </div>
+                    </div>
+
+                    <!-- Right Area: LỐI ĐI ĐẠI BIỂU -->
+                    <div class="w-24 md:w-36 border-l border-black/30 flex flex-col bg-white flex-shrink-0 ml-4 md:ml-8">
+                        <!-- Hình chữ nhật nhỏ nền đỏ -->
+                        <div class="bg-[#DA251D] h-[76px] md:h-[132px] pt-4 md:pt-8 flex items-center justify-center">
+                            <div class="text-white font-medium text-center text-[10px] md:text-sm leading-snug tracking-wide">
+                                LỐI ĐI<br>ĐẠI BIỂU
+                            </div>
+                        </div>
+                        <!-- Phần đường dẫn màu trắng -->
+                        <div class="flex-1 bg-white"></div>
+                    </div>
+                </div>
+
+                <!-- MIDDLE SECTION: Walkway -->
+                <div class="bg-[#9da7b3] text-white flex items-center justify-around py-2 md:py-3 border-y border-black/20 text-[10px] md:text-[13px] relative z-10 shadow-sm">
+                   <span class="tracking-wider">Khu vực tác nghiệp Báo chí - PT - TH</span>
+                   <span class="text-[#DA251D] font-bold text-[8px] md:text-[10px] tracking-widest bg-white/20 px-2 py-0.5 rounded-sm">CỘT INOX</span>
+                   <span class="tracking-wider">Khu vực tác nghiệp Báo chí - PT - TH</span>
+                </div>
+
+                <!-- BOTTOM SECTION: Audience & Lối Đi Khán Giả -->
+                <!-- BOTTOM SECTION: Audience & Lối Đi Khán Giả -->
+                <div class="flex w-full relative">
+                    <!-- Left Area: Seats -->
+                    <div class="bg-[#B0B5B9] flex-1 pt-6 md:pt-8 pb-8 md:pb-12 pl-4 md:pl-8 pr-4 md:pr-6 flex flex-col items-center">
+                        <div class="text-white font-bold tracking-widest text-lg md:text-2xl mb-8 text-center uppercase drop-shadow-md">
+                            Khu vực khán giả
+                        </div>
+                        <div id="rep-grey-seats-upper" class="flex justify-between w-full mb-6 md:mb-10">
+                        </div>
+                        <div id="rep-grey-seats-lower" class="flex justify-between w-full">
+                        </div>
+                    </div>
+                    <!-- Right Area: Lối đi khán giả -->
+                    <div class="w-24 md:w-36 bg-white flex flex-col flex-shrink-0 pt-6 md:pt-8 pb-8 md:pb-12">
+                        <!-- Spacer để canh lề bằng với tiêu đề bên trái -->
+                        <div class="text-transparent font-bold tracking-widest text-lg md:text-2xl mb-8">Spacer</div>
+                        <!-- Thẻ thứ nhất canh phía trên khối ghế Upper -->
+                        <div class="flex-1 flex flex-col justify-start mt-4 md:mt-8 mb-6 md:mb-10 w-full pl-0 pr-2 md:pr-4">
+                            <div class="bg-[#9fa4a9] w-full py-2 md:py-4 flex items-center justify-center shadow-sm rounded-r-sm">
+                                <span class="text-white text-center text-[9px] md:text-[11px] font-medium tracking-wide leading-tight">LỐI ĐI<br>KHÁN GIẢ</span>
+                            </div>
+                        </div>
+                        <!-- Thẻ thứ hai canh với khối ghế Lower -->
+                        <div class="flex items-center justify-start w-full pl-0 pr-2 md:pr-4">
+                            <div class="bg-[#9fa4a9] w-full py-2 md:py-4 flex items-center justify-center shadow-sm rounded-r-sm">
+                                <span class="text-white text-center text-[9px] md:text-[11px] font-medium tracking-wide leading-tight">LỐI ĐI<br>KHÁN GIẢ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VERY BOTTOM SECTION: FOH & Scaffolding -->
+                <div class="bg-white w-full py-8 md:py-12 px-2 flex justify-center items-center gap-6 md:gap-16 border-t border-black/30 relative z-10">
+                    <!-- Left Grid -->
+                    <div id="left-scaffold" class="grid grid-cols-5 grid-rows-3 w-24 h-16 md:w-40 md:h-24 border-t border-l border-black/60 bg-white">
+                    </div>
+
+                    <!-- Center FOH -->
+                    <div class="w-40 h-20 md:w-64 md:h-32 bg-[#4a4a4a] text-white flex flex-col items-center justify-center shadow-lg border-2 border-black/80 relative">
+                        <div id="foh-grid" class="absolute inset-0 grid grid-cols-8 grid-rows-4 opacity-30 pointer-events-none">
+                        </div>
+                        <span class="font-bold text-lg md:text-2xl tracking-wider relative z-10 drop-shadow-md">FOH</span>
+                        <span class="text-[10px] md:text-sm relative z-10 opacity-90 mt-1 tracking-wide">14,46x7,32m</span>
+                    </div>
+
+                    <!-- Right Grid -->
+                    <div id="right-scaffold" class="grid grid-cols-5 grid-rows-3 w-24 h-16 md:w-40 md:h-24 border-t border-l border-black/60 bg-white">
+                    </div>
+                </div>
+
+            </div>
+    </div>
+    </div>
+    <!-- Floating Interactive Overlays for Map -->
+    <div class="absolute bottom-4 right-4 z-30 flex flex-col gap-2">
+        <button id="btn-zoom-in" class="w-10 h-10 bg-white text-on-surface-variant flex items-center justify-center rounded-full shadow-md hover:bg-surface-container transition-colors active:scale-95">
+            <span class="material-symbols-outlined">add</span>
+        </button>
+        <button id="btn-zoom-out" class="w-10 h-10 bg-white text-on-surface-variant flex items-center justify-center rounded-full shadow-md hover:bg-surface-container transition-colors active:scale-95">
+            <span class="material-symbols-outlined">remove</span>
+        </button>
+        <button id="btn-my-location" class="w-10 h-10 bg-error text-white flex items-center justify-center rounded-full shadow-md hover:bg-error/90 transition-colors active:scale-95 mt-1" title="Vị trí của bạn">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">my_location</span>
+        </button>
+        <button id="btn-sos" class="w-10 h-10 bg-[#FF9800] text-white flex items-center justify-center rounded-full shadow-md hover:bg-[#F57C00] transition-colors active:scale-95 mt-1 hidden" title="Báo Cáo Sự Cố Khẩn Cấp">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+        </button>
+    </div>
+</section>
+</main>
+
+<!-- SOS Modal -->
+<div id="sos-modal" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm px-4">
+    <div class="bg-surface w-full max-w-sm rounded-[24px] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
+        <div class="bg-error px-6 py-4 flex items-center justify-between">
+            <h3 class="text-white font-headline-sm font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined">campaign</span> Gọi Hỗ Trợ Khẩn
+            </h3>
+            <button id="btn-close-sos" class="text-white/80 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <p class="text-on-surface font-body-md">Gửi tín hiệu khẩn cấp đến Ban tổ chức để được hỗ trợ trực tiếp tại ghế của bạn:</p>
+            <div class="space-y-3">
+                <label class="flex items-center gap-3 p-3 border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container transition-colors">
+                    <input type="radio" name="sos_reason" value="Ghế đang bị người lạ chiếm dụng" class="w-5 h-5 text-error focus:ring-error" checked>
+                    <span class="text-body-md">Ghế đang bị người lạ chiếm dụng</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container transition-colors">
+                    <input type="radio" name="sos_reason" value="Không tìm thấy lối vào hàng ghế" class="w-5 h-5 text-error focus:ring-error">
+                    <span class="text-body-md">Không tìm thấy lối vào hàng ghế</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container transition-colors">
+                    <input type="radio" name="sos_reason" value="Cần hỗ trợ vấn đề khác" class="w-5 h-5 text-error focus:ring-error">
+                    <span class="text-body-md">Cần hỗ trợ vấn đề khác</span>
+                </label>
+            </div>
+            <button id="btn-submit-sos" class="w-full h-12 bg-error text-white font-label-bold rounded-xl shadow-md active:scale-95 transition-transform mt-2">GỬI YÊU CẦU NGAY</button>
+        </div>
+    </div>
+</div>
+<!-- BottomNavBar Anchor -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex flex-col px-4 pb-2 pt-2 bg-surface/60 backdrop-blur-xl border-t border-white/40 rounded-t-2xl shadow-2xl">
+<div class="flex justify-around items-center w-full">
+<button onclick="window.location.href='index.html'" class="flex flex-1 flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all p-2">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm mt-1">Tìm kiếm</span>
+</button>
+<button onclick="window.location.href='index2.html'" class="flex flex-1 flex-col items-center justify-center text-primary transition-all p-2 relative">
+<div class="absolute -top-6 bg-primary-container text-on-primary-container rounded-full p-3 shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold mt-5">Sơ đồ</span>
+</button>
+</div>
+<div class="mt-2 text-center text-on-surface-variant text-[10px] font-medium opacity-80">
+© Một sản phẩm từ Linh Lê - Người con của mảnh đất Vĩnh Linh
+</div>
+</nav>
+
+<script>
+    window.initApp(() => {
+        const guestId = window.myCheckedInGuest;
+        if (!guestId) {
+            alert('Vui lòng tra cứu chỗ ngồi trước.');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const guest = window.guestsData.find(g => String(g.id) === String(guestId));
+        if (guest) {
+            document.getElementById('user-name-display').textContent = `Tên: ${guest.name}`;
+            document.getElementById('user-unit-display').textContent = `Đơn vị: ${guest.unit}`;
+            document.getElementById('user-seat-display').textContent = `VỊ TRÍ CỦA BẠN: ${guest.seat}`;
+
+            // Render Exact Map
+            renderExactMap();
+            
+            setTimeout(() => {
+                scrollToSeat(guest.seat);
+            }, 500);
+        }
+    });
+
+    // Listen for live updates from Firebase to re-render map automatically
+    window.addEventListener('seatStatusUpdated', () => {
+        if (window.myCheckedInGuest) {
+            renderExactMap();
+        }
+    });
+
+    window.addEventListener('guestsDataUpdated', () => {
+        if (window.myCheckedInGuest) {
+            const guest = window.guestsData.find(g => String(g.id) === String(window.myCheckedInGuest));
+            if (guest) {
+                document.getElementById('user-name-display').textContent = `Tên: ${guest.name}`;
+                document.getElementById('user-unit-display').textContent = `Đơn vị: ${guest.unit}`;
+                document.getElementById('user-seat-display').textContent = `VỊ TRÍ CỦA BẠN: ${guest.seat}`;
+            }
+            renderExactMap();
+        }
+    });
+
+    let userSeatId = null;
+
+    function renderExactMap() {
+        const grid = document.getElementById('exact-map-grid');
+        grid.innerHTML = '';
+        const currentUserGuest = window.guestsData.find(g => String(g.id) === String(window.myCheckedInGuest));
+
+        const rowLetters = ['A', 'B', 'C', 'D', 'E'];
+
+        for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
+            const rowLetter = rowLetters[rowIndex];
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'flex gap-2 md:gap-10 justify-center w-full';
+
+            // Left 6 columns (Odd numbers)
+            const leftHalf = document.createElement('div');
+            leftHalf.className = 'flex gap-1.5 md:gap-3';
+            
+            for (let col = 6; col >= 1; col--) { // col 6 is near wall, col 1 is near center
+                const tableCol = document.createElement('div');
+                tableCol.className = 'flex flex-col gap-1';
+                
+                const tableShape = document.createElement('div');
+                tableShape.className = 'w-full h-2 md:h-4 bg-[#E0E0E0] border border-[#999] shadow-sm rounded-sm';
+                tableCol.appendChild(tableShape);
+                
+                const seatsRow = document.createElement('div');
+                seatsRow.className = 'flex gap-[1px] md:gap-1 justify-between mt-1';
+                
+                for (let seatIdx = 8; seatIdx >= 1; seatIdx--) {
+                    // Odd numbers counting from center outward
+                    const distance = (col - 1) * 8 + (seatIdx - 1);
+                    const currentSeatNum = 1 + distance * 2;
+                    const seatId = `${rowLetter}${currentSeatNum}`;
+                    
+                    const seatEl = createSeatElement(seatId, currentUserGuest);
+                    seatsRow.appendChild(seatEl);
+                }
+                tableCol.appendChild(seatsRow);
+                leftHalf.appendChild(tableCol);
+            }
+
+            // Right 6 columns (Even numbers)
+            const rightHalf = document.createElement('div');
+            rightHalf.className = 'flex gap-1.5 md:gap-3';
+            
+            for (let col = 1; col <= 6; col++) { // col 1 is near center, col 6 is near wall
+                const tableCol = document.createElement('div');
+                tableCol.className = 'flex flex-col gap-1';
+                
+                const tableShape = document.createElement('div');
+                tableShape.className = 'w-full h-2 md:h-4 bg-[#E0E0E0] border border-[#999] shadow-sm rounded-sm';
+                tableCol.appendChild(tableShape);
+                
+                const seatsRow = document.createElement('div');
+                seatsRow.className = 'flex gap-[1px] md:gap-1 justify-between mt-1';
+                
+                for (let seatIdx = 1; seatIdx <= 8; seatIdx++) {
+                    // Even numbers counting from center outward
+                    const distance = (col - 1) * 8 + (seatIdx - 1);
+                    const currentSeatNum = 2 + distance * 2;
+                    const seatId = `${rowLetter}${currentSeatNum}`;
+                    
+                    const seatEl = createSeatElement(seatId, currentUserGuest);
+                    seatsRow.appendChild(seatEl);
+                }
+                tableCol.appendChild(seatsRow);
+                rightHalf.appendChild(tableCol);
+            }
+
+            // Center Aisle Gap with Row Label
+            const aisleGap = document.createElement('div');
+            aisleGap.className = 'w-4 md:w-16 flex-shrink-0 relative flex items-center justify-center'; 
+            
+            const rowLabel = document.createElement('div');
+            rowLabel.className = 'absolute text-[#ccc] font-bold text-sm md:text-2xl top-[-5px] md:top-[-10px]';
+            rowLabel.textContent = rowLetter;
+            aisleGap.appendChild(rowLabel);
+
+            rowDiv.appendChild(leftHalf);
+            rowDiv.appendChild(aisleGap);
+            rowDiv.appendChild(rightHalf);
+            
+            grid.appendChild(rowDiv);
+        }
+    }
+
+    function createSeatElement(seatId, currentUserGuest) {
+        const status = window.seatStatusMap[seatId] || 'empty';
+        const isCurrentUserSeat = currentUserGuest && currentUserGuest.seat === seatId;
+        
+        const seatDiv = document.createElement('div');
+        seatDiv.id = `seat-${seatId}`;
+        seatDiv.className = 'w-1.5 h-1.5 md:w-2.5 md:h-2.5 flex items-center justify-center relative cursor-pointer group tooltip-trigger';
+        seatDiv.title = seatId;
+        
+        let innerClasses = 'w-full h-full rounded-[1px] ';
+        if (isCurrentUserSeat) {
+            innerClasses += 'bg-[#4CAF50] ring-2 ring-[#4CAF50]/80 transform scale-150 rounded-sm z-20 active-dot';
+            userSeatId = `seat-${seatId}`;
+        } else if (status === 'occupied') {
+            // Làm mờ ghế đã có người ngồi (opacity-30) để tập trung vào ghế của user
+            innerClasses += 'bg-[#444444] border border-[#222222] opacity-30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]'; 
+        } else {
+            innerClasses += 'bg-white border border-[#999999] opacity-80 shadow-sm hover:bg-gray-200';
+        }
+        
+        seatDiv.innerHTML = `<div class="${innerClasses}"></div>`;
+        
+        seatDiv.addEventListener('click', () => {
+            alert(`Ghế: ${seatId}\nTrạng thái: ${status === 'occupied' ? 'Đã có người' : 'Còn trống'}`);
+        });
+        
+        return seatDiv;
+    }
+    
+    function scrollToSeat(seatId) {
+        const seatEl = document.getElementById(`seat-${seatId}`);
+        if (seatEl) {
+            // Tự động phóng to sơ đồ để dễ nhìn thấy ghế
+            zoomLevel = 1.6;
+            if (typeof updateZoom === 'function') updateZoom();
+            
+            // Đợi CSS transform hoàn tất rồi mới cuộn đến vị trí trung tâm
+            setTimeout(() => {
+                seatEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            }, 300);
+        }
+    }
+
+    // Map Interactions (Zoom / Pan)
+    let zoomLevel = 1;
+    const zoomWrapper = document.getElementById('zoom-wrapper');
+    const scrollArea = document.getElementById('map-scroll-area');
+    
+    document.getElementById('btn-zoom-in').addEventListener('click', () => {
+        zoomLevel = Math.min(zoomLevel + 0.2, 2.5);
+        updateZoom();
+    });
+    
+    document.getElementById('btn-zoom-out').addEventListener('click', () => {
+        zoomLevel = Math.max(zoomLevel - 0.2, 0.4);
+        updateZoom();
+    });
+    
+    function updateZoom() {
+        zoomWrapper.style.transform = `scale(${zoomLevel})`;
+    }
+
+    // Drag to Pan Logic
+    let isDragging = false;
+    let startX, startY, scrollLeft, scrollTop;
+
+    scrollArea.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        scrollArea.classList.add('active:cursor-grabbing');
+        startX = e.pageX - scrollArea.offsetLeft;
+        startY = e.pageY - scrollArea.offsetTop;
+        scrollLeft = scrollArea.scrollLeft;
+        scrollTop = scrollArea.scrollTop;
+    });
+
+    scrollArea.addEventListener('mouseleave', () => {
+        isDragging = false;
+    });
+
+    scrollArea.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    scrollArea.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - scrollArea.offsetLeft;
+        const y = e.pageY - scrollArea.offsetTop;
+        const walkX = (x - startX) * 1.5; // Scroll speed
+        const walkY = (y - startY) * 1.5;
+        scrollArea.scrollLeft = scrollLeft - walkX;
+        scrollArea.scrollTop = scrollTop - walkY;
+    });
+
+    document.getElementById('btn-my-location').addEventListener('click', function() {
+        const guest = window.guestsData.find(g => String(g.id) === String(window.myCheckedInGuest));
+        if (guest) {
+            scrollToSeat(guest.seat);
+        }
+    });
+
+    // SOS Logic
+    const btnSos = document.getElementById('btn-sos');
+    const sosModal = document.getElementById('sos-modal');
+    const btnCloseSos = document.getElementById('btn-close-sos');
+    const btnSubmitSos = document.getElementById('btn-submit-sos');
+
+    // Display SOS button only if user is logged in
+    if (window.myCheckedInGuest) {
+        btnSos.classList.remove('hidden');
+    }
+
+    btnSos.addEventListener('click', () => {
+        // Check cooldown
+        const lastSos = localStorage.getItem('lastSosTime');
+        if (lastSos && (Date.now() - parseInt(lastSos)) < 2 * 60 * 1000) {
+            alert("Bạn đã gửi yêu cầu rồi. Vui lòng đợi trong giây lát, BTC đang đến hỗ trợ!");
+            return;
+        }
+        sosModal.classList.remove('hidden');
+        setTimeout(() => {
+            sosModal.classList.remove('opacity-0');
+            sosModal.querySelector('div').classList.remove('scale-95');
+        }, 10);
+    });
+
+    const closeSos = () => {
+        sosModal.classList.add('opacity-0');
+        sosModal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => sosModal.classList.add('hidden'), 300);
+    };
+
+    btnCloseSos.addEventListener('click', closeSos);
+    sosModal.addEventListener('click', (e) => {
+        if (e.target === sosModal) closeSos();
+    });
+
+    btnSubmitSos.addEventListener('click', async () => {
+        const reason = document.querySelector('input[name="sos_reason"]:checked').value;
+        const guest = window.guestsData.find(g => String(g.id) === String(window.myCheckedInGuest));
+        if (!guest) return;
+
+        btnSubmitSos.textContent = "ĐANG GỬI...";
+        btnSubmitSos.disabled = true;
+
+        const success = await window.reportIncident(guest.id, guest.name, guest.seat, reason);
+        if (success) {
+            localStorage.setItem('lastSosTime', Date.now().toString());
+            alert("Đã gửi cảnh báo khẩn cấp tới Ban Tổ Chức. Xin quý khách đứng chờ tại chỗ, nhân viên sẽ tới hỗ trợ ngay!");
+            closeSos();
+        } else {
+            alert("Có lỗi kết nối mạng. Vui lòng thử lại hoặc nhờ nhân viên gần nhất.");
+        }
+        btnSubmitSos.textContent = "GỬI YÊU CẦU NGAY";
+        btnSubmitSos.disabled = false;
+    });
+
+    // Custom CSS to hide scrollbar but keep functionality
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes seatGlow {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); transform: scale(1.5); }
+            50% { box-shadow: 0 0 10px 4px rgba(76, 175, 80, 0.9); transform: scale(1.8); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); transform: scale(1.5); }
+        }
+        .active-dot {
+            animation: seatGlow 1.5s infinite ease-in-out;
+            border: 1px solid white;
+        }
+    `;
+    document.head.appendChild(style);
+
+    function renderRepresentativeBlocks() {
+        // 1. Render Red Regular Seats
+        const redContainer = document.getElementById('rep-red-seats');
+        if (redContainer) {
+            redContainer.innerHTML = '';
+            // 8 blocks
+            for (let b = 0; b < 8; b++) {
+                const block = document.createElement('div');
+                block.className = 'grid grid-cols-10 gap-0.5 md:gap-[2px] bg-black/10 p-1 md:p-1.5 rounded-sm';
+                for (let i = 0; i < 80; i++) {
+                    const seat = document.createElement('div');
+                    seat.className = 'w-1 h-1 md:w-2 md:h-2 bg-[#d1d5db] border border-[#a3a3a3] rounded-[1px] shadow-sm';
+                    block.appendChild(seat);
+                }
+                redContainer.appendChild(block);
+            }
+        }
+
+        // 2. Render Grey Audience Seats (Upper Block)
+        const greyUpper = document.getElementById('rep-grey-seats-upper');
+        if (greyUpper) {
+            greyUpper.innerHTML = '';
+            for (let b = 0; b < 8; b++) {
+                const block = document.createElement('div');
+                block.className = 'grid grid-cols-12 gap-0.5 md:gap-[2px] p-1';
+                // Upper block has 16 rows (2 light, 14 dark)
+                for (let row = 0; row < 16; row++) {
+                    for (let col = 0; col < 12; col++) {
+                        const seat = document.createElement('div');
+                        if (row < 2) {
+                            seat.className = 'w-1 h-1 md:w-2 md:h-2 bg-[#6bc4d9] rounded-[1px]';
+                        } else {
+                            seat.className = 'w-1 h-1 md:w-2 md:h-2 bg-[#488cc7] rounded-[1px]';
+                        }
+                        block.appendChild(seat);
+                    }
+                }
+                greyUpper.appendChild(block);
+            }
+        }
+
+        // 3. Render Grey Audience Seats (Lower Block)
+        const greyLower = document.getElementById('rep-grey-seats-lower');
+        if (greyLower) {
+            greyLower.innerHTML = '';
+            for (let b = 0; b < 8; b++) {
+                const block = document.createElement('div');
+                block.className = 'grid grid-cols-12 gap-0.5 md:gap-[2px] p-1';
+                // Lower block has 4 rows
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 12; col++) {
+                        const seat = document.createElement('div');
+                        seat.className = 'w-1 h-1 md:w-2 md:h-2 bg-[#488cc7] rounded-[1px]';
+                        block.appendChild(seat);
+                    }
+                }
+                greyLower.appendChild(block);
+            }
+        }
+        // 3. Render Bottom Grids (FOH & Scaffolds)
+        const leftGrid = document.getElementById('left-scaffold');
+        const rightGrid = document.getElementById('right-scaffold');
+        if (leftGrid && rightGrid) {
+            leftGrid.innerHTML = ''; rightGrid.innerHTML = '';
+            for (let i = 0; i < 15; i++) {
+                const div1 = document.createElement('div');
+                div1.className = 'border-b border-r border-black/60';
+                leftGrid.appendChild(div1);
+                
+                const div2 = document.createElement('div');
+                div2.className = 'border-b border-r border-black/60';
+                rightGrid.appendChild(div2);
+            }
+        }
+
+        const fohGrid = document.getElementById('foh-grid');
+        if (fohGrid) {
+            fohGrid.innerHTML = '';
+            for (let i = 0; i < 32; i++) {
+                const div = document.createElement('div');
+                div.className = 'border-b border-r border-black/80';
+                fohGrid.appendChild(div);
+            }
+        }
+    }
+    
+    // Call the function on load
+    document.addEventListener('DOMContentLoaded', () => {
+        renderRepresentativeBlocks();
+    });
+</script>
+</body>
+</html>
